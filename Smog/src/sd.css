@@ -12,25 +12,24 @@
 
 .panel-heading {
     padding: 0;
-    /*font-size: 6.2vmin;*/
-    font-size: 5.8vmin;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 25%;
+    height: 35%;
+    font-size: 7vmin;
+    line-height: 8vmin;
+    text-align: center;
 }
 .panel-body {
     padding: 0 6px 1px 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 75%;
+    height: 65%;
     position: relative;
 }
 
 .panel-body .value {
     font-size: 19vmin;
     font-weight: bold;
+    padding-bottom: 7px;
 }
 .panel-body .time {
     position: absolute;
@@ -42,6 +41,7 @@
 @media all and (max-width: 160px) {
     .panel-heading {
         font-size: 7.5vw;
+        line-height: 18vmin;
     }
 
     .panel-heading .label-long {
