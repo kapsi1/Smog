@@ -16,6 +16,7 @@
   ],
   "speeddial": {
     "url": "http://monitoring.krakow.pios.gov.pl/",
-    "title": "Smog Kraków"
+    "title": "Smog Kraków",
+    "size_mode": "adapt"
   }
 }

@@ -28,6 +28,15 @@
     height: 75%;
 }
 
+@media all and (max-width: 160px) {
+    .panel-heading .label-long {
+        display: none;
+    }
+    .panel-body {
+        font-size: x-large;
+    }
+}
+
 .panel-warning .panel-heading {
     background-color: #FFF2AE;
 }

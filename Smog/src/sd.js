@@ -2,14 +2,14 @@ var mainContainer = document.querySelector('#container');
 
 function update(station) {
     var smogTypes = [
-            {label: 'Dwutlenek siarki (SO<sub>2</sub>)', row: 2, norm: 350},
-            {label: 'Dwutlenek azotu (NO<sub>2</sub>)', row: 4, norm: 200},
-            {label: 'Pył zawieszony (PM10)', row: 7, norm: 50},
-            {label: 'Pył zawieszony (PM2.5)', row: 8, norm: 25}
+            {label: {long: 'Dwutlenek siarki', short: 'SO<sub>2</sub>'}, row: 2, norm: 350},
+            {label: {long: 'Dwutlenek azotu', short: 'NO<sub>2</sub>'}, row: 4, norm: 200},
+            {label: {long: 'Pył zawieszony', short: 'PM10'}, row: 7, norm: 50},
+            {label: {long: 'Pył zawieszony', short: 'PM2.5'}, row: 8, norm: 25}
         ],
         url = 'http://monitoring.krakow.pios.gov.pl/iseo/aktualne_stacja.php?stacja=' + station.number;
 
-    smogTypes.forEach(function (st) {
+    smogTypes.forEach(function () {
         var container = document.createElement('div'),
             heading = document.createElement('div'),
             panelBody = document.createElement('div'),
@@ -26,9 +26,7 @@ function update(station) {
 
     function getData() {
         var req = new XMLHttpRequest();
-        req.open('GET', url, false);
-        req.send(null);
-        if (req.status == 200) {
+        req.onload = function () {
             var page = document.createElement('html');
             page.innerHTML = req.responseText;
             var table = page.querySelector('table tbody');
@@ -54,15 +52,20 @@ function update(station) {
                     panel.className = 'panel panel-success';
                 }
 
-                panel.querySelector('.panel-heading').innerHTML = '<span>' + st.label + '</span>';
+                panel.querySelector('.panel-heading').innerHTML =
+                    '<span class="label-long">' + st.label.long + ' (</span>'+
+                    '<span class="label-short">' + st.label.short + '</span>'+
+                    '<span class="label-long">)';
                 panel.querySelector('.panel-body .value').textContent = percentVal + '%';
             });
-        }
+        };
+        req.open('GET', url);
+        req.send();
     }
 
     opr.speeddial.update({url: url, title: 'Smog: Kraków - ' + station.name});
     getData();
-    setInterval(getData, 1000 * 60 * 30); //30m
+    setInterval(getData, 1000 * 60 * 5); //5m
 }
 
 chrome.runtime.onMessage.addListener(function (station) {
