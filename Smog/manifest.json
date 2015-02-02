@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "Kraków Smog Speed Dial",
+  "description": "Poziom smogu w Krakowie",
+  "version": "1",
+  "background": {"page": "src/sd.html"},
+  "options_page": "src/options.html",
+  "icons": {
+    "16": "img/icon_16.png",
+    "48": "img/icon_48.png",
+    "128": "img/icon_128.png"
+  },
+  "permissions": [
+    "speeddial",
+    "http://monitoring.krakow.pios.gov.pl/"
+  ],
+  "speeddial": {
+    "url": "http://monitoring.krakow.pios.gov.pl/",
+    "title": "Smog Kraków"
+  }
+}
