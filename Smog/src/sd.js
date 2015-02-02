@@ -1,4 +1,5 @@
-var mainContainer = document.querySelector('#container');
+var updateIntervalMinutes = 10,
+    mainContainer = document.querySelector('#container');
 
 function update(station) {
     var smogTypes = [
@@ -52,7 +53,12 @@ function update(station) {
                     '<span class="label-short">' + type.label.short + '</span>' +
                     '<span class="label-long">)';
 
-                if (time === 0) {
+                var measureTime = new Date();
+                measureTime.setHours(time);
+                var timeDiffH = Math.floor((new Date() - measureTime)/1000/60/60);
+
+                if (time === 0 || timeDiffH > 3) {
+                    panel.className = 'panel panel-default';
                     panel.querySelector('.panel-body .value').textContent = 'b/d';
                 } else {
                     var percentVal = Math.round(lastVal / type.norm * 100);
@@ -64,7 +70,7 @@ function update(station) {
                         panel.className = 'panel panel-success';
                     }
                     panel.querySelector('.panel-body .value').textContent = percentVal + '%';
-                    panel.querySelector('.panel-body .time').textContent = time + ':00';
+                    panel.querySelector('.panel-body .time').textContent = time + ':00 (+' + timeDiffH + 'h)';
                 }
             });
         };
@@ -75,7 +81,7 @@ function update(station) {
 
     opr.speeddial.update({url: url, title: 'Smog: Kraków - ' + station.name});
     getData();
-    setInterval(getData, 1000 * 60 * 5); //5m
+    setInterval(getData, 1000 * 60 * updateIntervalMinutes);
 }
 
 chrome.runtime.onMessage.addListener(function (station) {
