@@ -35,7 +35,18 @@ function update(station) {
             var table = page.querySelector('table tbody');
             var rows = table.querySelectorAll('tr');
             smogTypes.forEach(function (type, i) {
+                var panel = document.querySelectorAll('.panel')[i];
+                panel.querySelector('.panel-heading').innerHTML =
+                    '<span class="label-long">' + type.label.long + ' (</span>' +
+                    '<span class="label-short">' + type.label.short + '</span>' +
+                    '<span class="label-long">)';
+
                 var row = rows[type.row];
+                if(!row) {
+                    panel.className = 'panel panel-default';
+                    panel.querySelector('.panel-body .value').textContent = 'b/d';
+                    return;
+                }
                 var j, columns, lastVal, time;
                 columns = [].splice.call(row.querySelectorAll('td'), 0).map(function (col) {
                     return col.textContent;
@@ -47,11 +58,6 @@ function update(station) {
                         break;
                     }
                 }
-                var panel = document.querySelectorAll('.panel')[i];
-                panel.querySelector('.panel-heading').innerHTML =
-                    '<span class="label-long">' + type.label.long + ' (</span>' +
-                    '<span class="label-short">' + type.label.short + '</span>' +
-                    '<span class="label-long">)';
 
                 var measureTime = new Date();
                 measureTime.setHours(time);

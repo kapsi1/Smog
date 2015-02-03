@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Kraków Smog Speed Dial",
   "description": "Poziom smogu w Krakowie",
-  "version": "2",
+  "version": "3",
   "background": {"page": "src/sd.html"},
   "options_page": "src/options.html",
   "icons": {
