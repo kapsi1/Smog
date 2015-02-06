@@ -1,5 +1,9 @@
-var updateIntervalMinutes = 10,
-    mainContainer = document.querySelector('#container');
+var updateIntervalMinutes = 10;
+function forEach(array, callback, scope) {
+    for (var i = 0; i < array.length; i++) {
+        callback.call(scope, array[i], i);
+    }
+}
 
 function update(station) {
     var smogTypes = [
@@ -19,6 +23,7 @@ function update(station) {
             smogTypes.forEach(function (type, i) {
                 var row, tc, panel = document.querySelectorAll('.panel')[i];
 
+                //find data type in table rows
                 for (var k = 0; k < rows.length; k++) {
                     tc = rows[k].querySelector('td').textContent;
                     if (tc.indexOf(type.label.long) !== -1 &&
@@ -32,29 +37,27 @@ function update(station) {
                     panel.querySelector('.panel-body .value').textContent = 'b/d';
                     panel.querySelector('.time').style.display = 'none';
                 }
-                if(!row) return;
-                var j, columns, lastVal, time;
+                if (!row) return;
+                var j, columns, lastVal, hour;
                 columns = [].splice.call(row.querySelectorAll('td'), 0).map(function (col) {
                     return col.textContent;
                 });
                 for (j = columns.length - 2; j > 0; j--) {
                     lastVal = columns[j].trim();
-                    time = j - 2;
+                    hour = j - 2;
                     if (lastVal) {
                         break;
                     }
                 }
-
-                if(time === 0 && panel.querySelector('.time').textContent){
+                if (hour < 1 && panel.querySelector('.hour').textContent) {
                     //we have saved measurement but server didn't respond with an updated one
-                    time = parseInt(panel.querySelector('.time .offset').textContent, 10);
+                    hour = parseInt(panel.querySelector('.time .hour').textContent, 10);
                 }
-
                 var measureTime = new Date();
-                measureTime.setHours(time);
+                measureTime.setHours(hour);
                 var timeDiffH = Math.floor((new Date() - measureTime) / 1000 / 60 / 60);
 
-                if (timeDiffH > 3) {
+                if (hour < 1 || timeDiffH > 3) {
                     panel.className = 'panel panel-default';
                     panel.querySelector('.value').textContent = 'b/d';
                     panel.querySelector('.time').style.display = 'none';
@@ -68,7 +71,7 @@ function update(station) {
                         panel.className = 'panel panel-success';
                     }
                     panel.querySelector('.value').textContent = percentVal + '%';
-                    panel.querySelector('.time .hour').textContent = time + ':00';
+                    panel.querySelector('.time .hour').textContent = hour + ':00';
                     panel.querySelector('.time .offset').textContent = timeDiffH;
                     panel.querySelector('.time').style.display = 'inline';
                 }
@@ -85,7 +88,12 @@ function update(station) {
 }
 
 chrome.runtime.onMessage.addListener(function (station) {
-    mainContainer.innerHTML = '';
+    forEach(document.querySelectorAll('.value, .hour, .offset'), function (el) {
+        el.textContent = '';
+    });
+    forEach(document.querySelectorAll('.time'), function (el) {
+        el.style.display = 'none';
+    });
     update(station);
 });
 var savedStation = JSON.parse(localStorage.getItem('station'));
