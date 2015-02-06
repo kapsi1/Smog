@@ -35,14 +35,21 @@ function update(station) {
             var table = page.querySelector('table tbody');
             var rows = table.querySelectorAll('tr');
             smogTypes.forEach(function (type, i) {
-                var panel = document.querySelectorAll('.panel')[i];
+                var row, tc, panel = document.querySelectorAll('.panel')[i];
                 panel.querySelector('.panel-heading').innerHTML =
                     '<span class="label-long">' + type.label.long + ' (</span>' +
                     '<span class="label-short">' + type.label.short + '</span>' +
                     '<span class="label-long">)';
 
-                var row = rows[type.row];
-                if(!row) {
+                for (var k = 0; k < rows.length; k++) {
+                    tc = rows[k].querySelector('td').textContent;
+                    if (tc.indexOf(type.label.long) !== -1 &&
+                        tc.indexOf(type.label.short.replace('<sub>', '').replace('</sub>', '')) !== -1) {
+                        row = rows[k];
+                        break;
+                    }
+                }
+                if (!row) {
                     panel.className = 'panel panel-default';
                     panel.querySelector('.panel-body .value').textContent = 'b/d';
                     return;
@@ -61,7 +68,7 @@ function update(station) {
 
                 var measureTime = new Date();
                 measureTime.setHours(time);
-                var timeDiffH = Math.floor((new Date() - measureTime)/1000/60/60);
+                var timeDiffH = Math.floor((new Date() - measureTime) / 1000 / 60 / 60);
 
                 if (time === 0 || timeDiffH > 3) {
                     panel.className = 'panel panel-default';
