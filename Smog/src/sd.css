@@ -33,6 +33,7 @@
 }
 .panel-body .time {
     position: absolute;
+    display: inline;
     bottom: 0;
     right: 3px;
     font-size: 8vmin;
